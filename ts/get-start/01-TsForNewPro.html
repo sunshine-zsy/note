@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01-TsForNewProgrammer</title>
+</head>
+
+<body>
+    <h1>01</h1>
+    <h2>JS 的简短历史</h2>
+    <div>
+        <ul>
+            <li>JS（JavaScript）最开始只是内嵌在网页里的简短脚本语言。但，久而久之， JS 越来越流行。开发者开始用它来实现复杂的交互。</li>
+            <li>因为 JS 最开始被设计的目的不是用于构建大型的应用，所以 JS 中的缺陷和特点特别多。</li>
+            <li>缺陷例子，见 JS 片段 1</li>
+        </ul>
+    </div>
+    <h2>TypeScript: A Static Type Checker</h2>
+    <div>
+        <ul>
+            <li>静态类型检查：在没有运行代码的时候，检查代码中的错误。</li>
+            <li>TypeScript 能在运行之前检查项目的错误</li>
+            <li><img src="./img/ts_for_new01.png"></li>
+        </ul>
+    </div>
+    <h2>TS: 类型化的 JavaScript 超集</h2>
+    <p>TS 和 JS 的关系是什么呢？</p>
+    <ul>
+        <li>
+            <h3>语法</h3>
+            <p>TypeScript 这门语言是 Javascript 的超集。所以 JS 的语法同样遵守 TS 的语法规则。JS 的代码可以放到 TS 文件中运行。</p>
+        </li>
+        <li>
+            <h3>类型</h3>
+            <p>TS 是 JS 类型上的超集，即增加了如何使用不同的值的规则。</p>
+            <p>下面的 JS 代码不会报错，并且会 log 一个值。</p>
+            <p><img src="./img/ts_for_new02.png" alt=""></p>
+            <p>但是 TS 认为数据除一个 number 是没有意义的，并且会抛出一个错误。</p>
+            <p><img src="./img//ts_for_new03.png" alt=""></p>
+            <p>TS 的类型检查器会尽可能多的捕捉常见的错误，来保证项目的正确性。</p>
+        </li>
+        <li>
+            <h3>运行时行为</h3>
+            <p>TS 保留了 JS 的运行时行为。TS 不会改变 JS code 的运行时行为。例如：除以 0 时，JS 会抛出 infinity 的结果，而不是一个运行时错误。 TS 不会改变这些行为。</p>
+        </li>
+        <li>
+            <h3>擦除类型</h3>
+            <p>编译后的 TS 代码会成为纯粹的 JS 代码，所以最终的代码里面是没有类型的。</p>
+            <p>TypeScript 没有提供其他额外的运行时的库。所以，TS 项目里也是使用与 JS 相同的标准库。</p>
+        </li>
+    </ul>
+    <h2>总结</h2>
+    <div> TypeScript is JavaScript’s runtime with a compile-time type checker. (TS 就是带有编译时类型检查器的JS运行时。)</div>
+    <script>
+        // 片段 1
+        // == 操作符会有强制类型转换
+        if ("" == 0) {
+            // It is! But why??
+        }
+        const x = 'd'
+        if (1 < x < 3) {
+            console.log('xx');
+            // True for *any* value of x!
+        }
+
+        // 在 JS 中可以访问不存在的对象属性
+        const obj = { width: 1, height: 3 }
+        console.log(obj.age);
+    </script>
+</body>
+
+</html>
