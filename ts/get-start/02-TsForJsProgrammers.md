@@ -60,6 +60,112 @@ function deleteUser(user: User){
 // 同时，TS 也拓展了一些类型，any:即允许任何类型，放弃了类型检查？，unknown：ensure someone using this type declares what the type is，没有放弃类型检查，后续使用的时候，会去确认类型，never: 不可能发生的情况，void:一个函数没有返回值或返回 undefined 时，就是 void
 // TODO: 这里添加一些对 any、unknown、never 的具体解释
 
+// unknown 就像是 any 的兄弟类型一样。但是两者有些不同，any,会放弃类型的检查，类型为 unknown 的变量在后续的工作中仍然需要一个具体的类型。
+// 这里使用 TypeScript 官网的例子叭：
+// 官网的例子是对 JSON.parse() 的一个使用。 JSON 数据的来源是未知的，parse 函数的调用者也不知道数据的类型或者说形状吧。
+const josnParser = (jsonString: string)=> JSON.parse(jsonString);
+
+const myAccount = josnParser('{"name":"nick","age":18}')
+
+myAccount.name
+myAccount.age
+
+// 这里的 jsonParser 返回的是 any 类型，所以 myAccount 能够正常的读取 name,age 等属性
+// 可以使用 unknown ,或者泛型来修复类型检查
+const jsonParserUnknown = (jsonString: string): unknown => JSON.parse(jsonString)
+const myOtherAccount = jsonParserUnknown('{"name":"nick","age":20}')
+myOtherAccount.name  // 此时就会有类型的错误，提示 myOtherAccount 为 unknown ,需要给它一个具体的类型
+
+// 可以预先定义一个类型
+interface User {
+    name: string
+}
+
+const userAccount = jsonParserUnknown('{"name":"nick"}') as User
+userAccount.name
+// -----------
+
+
+// Never
+
+// never 代表在代码逻辑上不可能发生的情况,不能到达的终点？
+// 例如，函数永远不能返回
+const neverReturns = () => {
+    throw new Error('never return')
+}
+// neverReturns 的类型为，() => never.
+// never 可以像其他类型一样，传递
+const myNever = neverReturns()
+
+// 在某些情况下，拥有一个永远不能返回的函数是很有用的。
+// 比如：处理 JS 运行时的不可预测性，及 API 使用者不使用类型的情况
+// 有点没太理解到下面部分的意思呢？？
+const validateUser = (user: User) => {
+    if (user) {
+        return user.name !== "NaN";
+    }
+
+    // According to the type system, this code path can never
+    // happen, which matches the return type of neverReturns.
+
+    return neverReturns();
+};
+// The type definitions state that a user has to be passed in
+// but there are enough escape valves in JavaScript whereby
+// you can't guarantee that.
+// 尽管这里定义了类型 User ,但是 JS 中有足够多的逃生舱，不能保证一定是 User？ 这句话啥意思呢。有点没懂
+
+// Using a function which returns never allows you to add
+// additional code in places which should not be possible.
+// This is useful for presenting better error messages,
+// or closing resources like files or loops.
+
+// A very popular use for never, is to ensure that a
+// switch is exhaustive. E.g., that every path is covered.
+
+// Here's an enum and an exhaustive switch, try adding
+// a new option to the enum (maybe Tulip?)
+
+
+enum Flower {
+    Rose,
+    Rhododendron,
+    Violet,
+    Daisy,
+    Tulip,
+}
+
+const flowerLatinName = (flower: Flower) => {
+    switch (flower) {
+        case Flower.Rose:
+            return "Rosa rubiginosa";
+        case Flower.Rhododendron:
+            return "Rhododendron ferrugineum";
+        case Flower.Violet:
+            return "Viola reichenbachiana";
+        case Flower.Daisy:
+            return "Bellis perennis";
+
+        default:
+            const _exhaustiveCheck: never = flower;
+            return _exhaustiveCheck;
+    }
+};
+
+// You will get a compiler error saying that your new
+// flower type cannot be converted into never.
+// 就算我得到了这个编译错误提示，意义是什么呢？不太明白
+
+// Never in Unions
+
+// never 会自动从联合类型中删除
+
+type NeverIsRemoved = string | never | number;
+
+// If you look at the type for NeverIsRemoved, you see that
+// it is string | number. This is because it should never
+// happen at runtime because you cannot assign to it.
+
 ```
 ## Composing Types 组合的类型 or 复杂的类型？
 * 这里有两种常见的方式将简单的类型组合成复杂的类型。 union or generic
